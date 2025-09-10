@@ -1,0 +1,295 @@
+﻿@model MunicipalServicesApp.Models.ReportIssueViewModel
+@{
+    ViewData["Title"] = "Report Issue";
+    var categories = new List<string> { "Sanitation", "Roads", "Utilities", "Electricity", "Water", "Parks", "Graffiti", "Other" };
+}
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Report New Issue</h2>
+        <p class="text-muted">Help us improve municipal services by reporting issues in your area</p>
+
+        <!-- Progress Bar -->
+        <div class="progress mb-4" style="height: 20px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                 style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="reportProgress">
+                <span id="progressText">0% Complete</span>
+            </div>
+        </div>
+
+        <!-- Encouragement Messages -->
+        <div class="alert alert-info" id="encouragementMessage">
+            <i class="fas fa-info-circle me-2"></i>
+            <span id="messageText">Thank you for helping improve our community! Your report makes a difference.</span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="SubmitIssue" method="post" id="issueReportForm" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Title" class="form-label">Title *</label>
+                            <input asp-for="Title" class="form-control" placeholder="Brief description of the issue" required maxlength="100">
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                            <div class="form-text">Maximum 100 characters</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Category" class="form-label">Category *</label>
+                            <select asp-for="Category" class="form-select" required>
+                                <option value="">Select Category</option>
+                                @foreach (var category in categories)
+                                {
+                                    <option value="@category">@category</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Category" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Location" class="form-label">Location *</label>
+                        <input asp-for="Location" class="form-control" placeholder="Street address or landmark" required>
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description *</label>
+                        <textarea asp-for="Description" class="form-control" rows="4"
+                                  placeholder="Please provide detailed information about the issue"
+                                  required maxlength="500"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <div class="form-text">Maximum 500 characters</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Media Attachments (Optional)</label>
+                        <input type="file" class="form-control" id="mediaFiles" name="MediaFiles"
+                               accept="image/*,.pdf,.doc,.docx" multiple>
+                        <div class="form-text">You can upload images or documents. Maximum 5 files, 5MB each.</div>
+                        <div id="filePreview" class="mt-2"></div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Fields marked with * are required. Your report will be reviewed within 24-48 hours.
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Report
+                        </button>
+                        <a asp-action="ServiceRequests" class="btn btn-outline-secondary">
+                            <i class="fas fa-list me-2"></i>View Requests
+                        </a>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-home me-2"></i>Main Menu
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-lightbulb me-2"></i>Reporting Tips
+                </h5>
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <i class="fas fa-info-circle text-primary me-2"></i>
+                        <strong>Be specific:</strong> Provide clear details about the location and nature of the issue.
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-camera text-primary me-2"></i>
+                        <strong>Include photos:</strong> Photos help our teams identify and address issues faster.
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                        <strong>Location matters:</strong> Accurate location information ensures faster response times.
+                    </li>
+                    <li>
+                        <i class="fas fa-bell text-primary me-2"></i>
+                        <strong>Stay informed:</strong> Enable notifications to receive updates about your reported issues.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-phone-alt me-2"></i>Emergency Contacts
+                </h5>
+                <p class="card-text">For urgent matters that require immediate attention, please contact:</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-ambulance me-2 text-danger"></i>
+                            Emergency Services
+                        </div>
+                        <span class="badge bg-primary rounded-pill">10111</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-phone me-2 text-primary"></i>
+                            Municipal Hotline
+                        </div>
+                        <span class="badge bg-primary rounded-pill">0800 123 456</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            const encouragementMessages = [
+                "Thank you for helping improve our community! Your report makes a difference.",
+                "Every report helps us serve you better. Thank you for your contribution!",
+                "Your attention to detail helps us maintain high service standards.",
+                "Together, we can make our municipality a better place to live.",
+                "Your report is valuable feedback that helps us improve services."
+            ];
+
+            let currentMessageIndex = 0;
+
+            // Rotate encouragement messages every 10 seconds
+            function rotateEncouragementMessage() {
+                currentMessageIndex = (currentMessageIndex + 1) % encouragementMessages.length;
+                $('#messageText').fadeOut(300, function() {
+                    $(this).text(encouragementMessages[currentMessageIndex]).fadeIn(300);
+                });
+            }
+
+            setInterval(rotateEncouragementMessage, 10000);
+
+            // Update progress bar as user fills the form
+            function updateProgress() {
+                let progress = 0;
+                const fields = ['#Title', '#Category', '#Location', '#Description'];
+
+                fields.forEach(field => {
+                    if ($(field).val().trim() !== '') {
+                        progress += 20;
+                    }
+                });
+
+                // Additional points for files
+                if ($('#mediaFiles')[0].files.length > 0) {
+                    progress += 20;
+                }
+
+                $('#reportProgress').css('width', progress + '%').attr('aria-valuenow', progress);
+                $('#progressText').text(progress + '% Complete');
+            }
+
+            // Attach event listeners to form fields
+            $('#Title, #Category, #Location, #Description, #mediaFiles').on('input change', updateProgress);
+
+            // File preview functionality
+            $('#mediaFiles').on('change', function() {
+                const files = this.files;
+                const preview = $('#filePreview');
+                preview.empty();
+
+                if (files.length > 0) {
+                    preview.append('<h6 class="mb-2">Selected Files:</h6>');
+
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const fileElement = $('<div class="file-preview-item mb-2"></div>');
+
+                        if (file.type.startsWith('image/')) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                fileElement.append(
+                                    `<img src="${e.target.result}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                                     <span class="small">${file.name}</span>`
+                                );
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            fileElement.append(
+                                `<i class="fas fa-file me-2 text-muted"></i>
+                                 <span class="small">${file.name}</span>`
+                            );
+                        }
+
+                        preview.append(fileElement);
+                    }
+                }
+
+                updateProgress();
+            });
+
+            $('#issueReportForm').on('submit', function(e) {
+                e.preventDefault();
+
+                // Basic validation
+                const title = $('#Title').val().trim();
+                const category = $('#Category').val();
+                const location = $('#Location').val().trim();
+                const description = $('#Description').val().trim();
+
+                if (!title || !category || !location || !description) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+
+                if (description.length < 10) {
+                    alert('Please provide a more detailed description (at least 10 characters).');
+                    return;
+                }
+
+                // File validation
+                const files = $('#mediaFiles')[0].files;
+                if (files.length > 5) {
+                    alert('Maximum 5 files allowed.');
+                    return;
+                }
+
+                for (let i = 0; i < files.length; i++) {
+                    if (files[i].size > 5 * 1024 * 1024) { // 5MB
+                        alert(`File "${files[i].name}" exceeds the 5MB size limit.`);
+                        return;
+                    }
+                }
+
+                // Show loading state
+                const submitBtn = $(this).find('button[type="submit"]');
+                const originalText = submitBtn.html();
+                submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Submitting...');
+
+                // Submit the form
+                this.submit();
+            });
+
+            // Initial progress update
+            updateProgress();
+        });
+    </script>
+
+    <style>
+        .file-preview-item {
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+
+        #encouragementMessage {
+            transition: all 0.3s ease;
+        }
+    </style>
+}

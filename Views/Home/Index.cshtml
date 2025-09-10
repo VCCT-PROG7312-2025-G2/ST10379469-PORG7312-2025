@@ -1,0 +1,127 @@
+﻿@model MunicipalServicesApp.Models.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Municipal Services Dashboard</h2>
+        <p class="text-muted">Welcome to your personalized dashboard</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card card-stat bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h5 class="card-title">Service Requests</h5>
+                        <h3 class="card-text">@Model.ServiceRequests.Count</h3>
+                    </div>
+                    <div>
+                        <i class="fas fa-list-alt fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card card-stat bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h5 class="card-title">Resolved Issues</h5>
+                        <h3 class="card-text">
+                            @Model.ServiceRequests.Count(r => r.Status == RequestStatus.Resolved || r.Status == RequestStatus.Closed)
+                        </h3>
+                    </div>
+                    <div>
+                        <i class="fas fa-check-circle fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card card-stat bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h5 class="card-title">Pending Requests</h5>
+                        <h3 class="card-text">
+                            @Model.ServiceRequests.Count(r => r.Status == RequestStatus.Submitted || r.Status == RequestStatus.InProgress)
+                        </h3>
+                    </div>
+                    <div>
+                        <i class="fas fa-clock fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card card-stat bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h5 class="card-title">Notifications</h5>
+                        <h3 class="card-text">@Model.Notifications.Count(n => !n.IsRead)</h3>
+                    </div>
+                    <div>
+                        <i class="fas fa-bell fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Recent Notifications</h5>
+            </div>
+            <div class="card-body">
+                @foreach (var notification in Model.Notifications.OrderByDescending(n => n.Timestamp).Take(3))
+                {
+                    <div class="notification-item @(!notification.IsRead ? "unread" : "")">
+                        <div class="d-flex justify-content-between">
+                            <h6>@notification.Title</h6>
+                            <small class="text-muted">@notification.Timestamp.ToString("g")</small>
+                        </div>
+                        <p class="mb-0">@notification.Message</p>
+                    </div>
+                }
+                <div class="text-center mt-3">
+                    <a asp-action="Notifications" class="btn btn-outline-primary">View All Notifications</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-action="ReportIssue" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus-circle me-2"></i>Report New Issue
+                    </a>
+                    <a asp-action="ServiceRequests" class="btn btn-outline-secondary">
+                        <i class="fas fa-list me-2"></i>View My Requests
+                    </a>
+                    <a asp-action="Notifications" class="btn btn-outline-secondary">
+                        <i class="fas fa-bell me-2"></i>Notification Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

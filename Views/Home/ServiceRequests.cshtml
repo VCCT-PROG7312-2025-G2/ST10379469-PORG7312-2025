@@ -1,0 +1,98 @@
+﻿@model MunicipalServicesApp.Models.CustomCollections.ServiceRequestCollection
+@{
+    ViewData["Title"] = "Service Requests";
+}
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h2>My Service Requests</h2>
+        <p class="text-muted">Track the status of your reported issues</p>
+    </div>
+    <div class="col-md-6 text-end">
+        <a asp-action="ReportIssue" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Report New Issue
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                @if (Model.Count == 0)
+                {
+                    <div class="text-center py-5">
+                        <i class="fas fa-list-alt fa-4x text-muted mb-3"></i>
+                        <h4>No service requests yet</h4>
+                        <p class="text-muted">Report your first issue to get started</p>
+                        <a asp-action="ReportIssue" class="btn btn-primary mt-2">
+                            <i class="fas fa-plus-circle me-2"></i>Report an Issue
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var request in Model)
+                    {
+                        string statusClass = "";
+                        switch (request.Status)
+                        {
+                            case RequestStatus.Submitted:
+                                statusClass = "status-submitted";
+                                break;
+                            case RequestStatus.InProgress:
+                                statusClass = "status-inprogress";
+                                break;
+                            case RequestStatus.Resolved:
+                                statusClass = "status-resolved";
+                                break;
+                            case RequestStatus.Closed:
+                                statusClass = "status-closed";
+                                break;
+                        }
+
+                        <div class="service-request-card card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h5 class="card-title">@request.Title</h5>
+                                        <p class="card-text text-muted">@request.Description</p>
+                                        <div class="d-flex align-items-center">
+                                            <span class="status-badge @statusClass me-2">@request.Status</span>
+                                            <small class="text-muted">Submitted: @request.CreatedDate.ToString("d")</small>
+                                        </div>
+                                        @if (request.Updates.Any())
+                                        {
+                                            <div class="mt-2">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-info-circle me-1"></i>
+                                                    Latest update: @request.Updates.OrderByDescending(u => u.Timestamp).First().Message
+                                                </small>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-primary view-details-btn" data-request-id="@request.Id">
+                                            <i class="fas fa-eye me-1"></i>Details
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.view-details-btn').click(function() {
+                const requestId = $(this).data('request-id');
+                alert('View details for request: ' + requestId + '\nIn a real application, this would show a modal with detailed information.');
+            });
+        });
+    </script>
+}

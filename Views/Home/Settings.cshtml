@@ -1,0 +1,175 @@
+﻿@{
+    ViewData["Title"] = "Settings";
+}
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Notification Settings</h2>
+        <p class="text-muted">Customize how you receive updates from municipal services</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form id="notificationSettings">
+                    <div class="mb-4">
+                        <h5 class="mb-3">Notification Channels</h5>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="pushNotifications" checked>
+                            <label class="form-check-label" for="pushNotifications">
+                                <i class="fas fa-mobile-alt me-2"></i>Push Notifications
+                            </label>
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="smsNotifications">
+                            <label class="form-check-label" for="smsNotifications">
+                                <i class="fas fa-sms me-2"></i>SMS Notifications
+                            </label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                            <label class="form-check-label" for="emailNotifications">
+                                <i class="fas fa-envelope me-2"></i>Email Notifications
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-3">Notification Categories</h5>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="serviceUpdates" checked>
+                            <label class="form-check-label" for="serviceUpdates">
+                                <i class="fas fa-tools me-2"></i>Service Updates
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="emergencies" checked>
+                            <label class="form-check-label" for="emergencies">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Emergencies
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="events">
+                            <label class="form-check-label" for="events">
+                                <i class="fas fa-calendar me-2"></i>Events
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="generalAnnouncements" checked>
+                            <label class="form-check-label" for="generalAnnouncements">
+                                <i class="fas fa-bullhorn me-2"></i>General Announcements
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-3">Language Preferences</h5>
+                        <select class="form-select" id="languagePreference">
+                            <option value="en" selected>English</option>
+                            <option value="zu">isiZulu</option>
+                            <option value="af">Afrikaans</option>
+                            <option value="st">Sesotho</option>
+                            <option value="xh">Xhosa</option>
+                            <option value="tn">Setswana</option>
+                            <option value="ts">Xitsonga</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-3">Notification Frequency</h5>
+                        <select class="form-select" id="notificationFrequency">
+                            <option value="immediate" selected>Immediately</option>
+                            <option value="hourly">Hourly Digest</option>
+                            <option value="daily">Daily Digest</option>
+                            <option value="weekly">Weekly Summary</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Preferences
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary">
+                            <i class="fas fa-undo me-2"></i>Reset to Defaults
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-sliders-h me-2"></i>Notification Preferences
+                </h5>
+                <p class="card-text">Customize how you receive notifications from municipal services to stay informed about important updates.</p>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Tip:</strong> Enable push notifications for real-time updates about service requests and emergencies.
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-question-circle me-2"></i>Need Help?
+                </h5>
+                <p class="card-text">If you need assistance with your notification settings, contact our support team.</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <i class="fas fa-phone me-2 text-primary"></i>
+                        <strong>Support Hotline:</strong> 0800 123 456
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-envelope me-2 text-primary"></i>
+                        <strong>Email:</strong> support@municipality.gov.za
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-clock me-2 text-primary"></i>
+                        <strong>Hours:</strong> Mon-Fri, 8:00-17:00
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#notificationSettings').on('submit', function(e) {
+                e.preventDefault();
+
+                // Get form values
+                const pushNotifications = $('#pushNotifications').is(':checked');
+                const smsNotifications = $('#smsNotifications').is(':checked');
+                const emailNotifications = $('#emailNotifications').is(':checked');
+                const language = $('#languagePreference').val();
+                const frequency = $('#notificationFrequency').val();
+
+                // Simulate saving preferences
+                alert('Your notification preferences have been saved successfully!\n\n' +
+                      `Push: ${pushNotifications}\n` +
+                      `SMS: ${smsNotifications}\n` +
+                      `Email: ${emailNotifications}\n` +
+                      `Language: ${$('#languagePreference option:selected').text()}\n` +
+                      `Frequency: ${$('#notificationFrequency option:selected').text()}`);
+            });
+
+            $('button[type="reset"]').click(function() {
+                if (confirm('Are you sure you want to reset all settings to default values?')) {
+                    $('#pushNotifications').prop('checked', true);
+                    $('#smsNotifications').prop('checked', false);
+                    $('#emailNotifications').prop('checked', true);
+                    $('#languagePreference').val('en');
+                    $('#notificationFrequency').val('immediate');
+                    alert('Settings have been reset to default values.');
+                }
+            });
+        });
+    </script>
+}
